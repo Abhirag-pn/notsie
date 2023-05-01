@@ -99,6 +99,7 @@ class _EditingScreenState extends State<EditingScreen> {
                 )
               ],
             ),
+        borderRadius: BorderRadius.circular(50),
           ),
         ],
       ),
@@ -110,6 +111,7 @@ class _EditingScreenState extends State<EditingScreen> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: ListView(
+                 physics: const BouncingScrollPhysics(),
                 children: [
                   TextFormField(
                     

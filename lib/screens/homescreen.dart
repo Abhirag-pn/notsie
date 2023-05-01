@@ -4,9 +4,15 @@ import 'package:bloc_test/screens/editing_screen.dart';
 import 'package:bloc_test/widgets/note_list_item.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool onlyStarred=false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,44 +30,63 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Notesie"),
       ),
-      body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: double.infinity,
-          child: StreamBuilder(
-            stream: NoteDb.instance.getallNotes(),
-            builder: (context, notes) {
-              if (notes.connectionState == ConnectionState.active ||
-                  notes.connectionState == ConnectionState.done) {
-                if (notes.hasData &&
-                    notes.data != null &&
-                    notes.data!.isNotEmpty) {
-                  return Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        return NoteItem(note: notes.data![index],
-                        );
-                      },
-                      itemCount: notes.data!.length,
-                    ),
-                  );
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              
+               customBorder:RoundedRectangleBorder(borderRadius:  BorderRadius.circular(10),) ,
+              
+              onTap: (){
+                setState(() {
+                  onlyStarred=!onlyStarred;
+                });
+              },
+              child: Chip(backgroundColor:onlyStarred?Colors.blue:null,label: Text("Starred",style: TextStyle(color: onlyStarred?Colors.white:null),
+              )),
+            ),
+            Expanded(
+                child: StreamBuilder(
+              stream: NoteDb.instance.getallNotes(onlyStarred),
+              builder: (context, notes) {
+                if (notes.connectionState == ConnectionState.active ||
+                    notes.connectionState == ConnectionState.done) {
+                  if (notes.hasData &&
+                      notes.data != null &&
+                      notes.data!.isNotEmpty) {
+                    return  ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return NoteItem(
+                            note: notes.data![index],
+                          );
+                        },
+                        itemCount: notes.data!.length,
+                      
+                    );
+                  } else {
+                    return Center(
+                        child: Text(
+                          !onlyStarred?
+                      "No Notes Found":"No Starred Notes",
+                      style: const TextStyle(
+                        color: Colors.black,
+                      ),
+                    ));
+                  }
                 } else {
                   return const Center(
-                      child: Text(
-                    "No Notes Found",
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
+                      child: CircularProgressIndicator(
+                    backgroundColor: Colors.black,
                   ));
                 }
-              } else {
-                return const Center(
-                    child: CircularProgressIndicator(
-                  backgroundColor: Colors.black,
-                ));
-              }
-            },
-          )),
+              },
+            )),
+          ],
+        ),
+      ),
     );
   }
 }

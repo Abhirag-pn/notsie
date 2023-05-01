@@ -1,6 +1,7 @@
 import 'package:bloc_test/db/notedb.dart';
 
 import 'package:bloc_test/screens/homescreen.dart';
+import 'package:bloc_test/screens/splashscreen.dart';
 
 import 'package:flutter/material.dart';
 
@@ -19,9 +20,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
         title: 'Notesie',
         theme: ThemeData(
+          
             textTheme:  TextTheme(
+              titleLarge:  const TextStyle(fontSize: 45, fontFamily: 'Jost',color: Colors.white),
                 titleMedium:
                     const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 bodyMedium:const  TextStyle(fontSize: 13),
@@ -34,6 +38,6 @@ class MyApp extends StatelessWidget {
             appBarTheme: const AppBarTheme(
                 color: Colors.black,
                 titleTextStyle: TextStyle(fontFamily: "Jost", fontSize: 23))),
-        home: const HomeScreen());
+        home: const SplashScreen());
   }
 }

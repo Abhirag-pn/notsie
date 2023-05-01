@@ -5,13 +5,22 @@ import 'package:intl/intl.dart';
 import '../db/notedb.dart';
 import '../screens/editing_screen.dart';
 
-class NoteItem extends StatelessWidget {
+class NoteItem extends StatefulWidget {
   final NoteModel note;
 
   const NoteItem({
     super.key,
     required this.note,
   });
+
+  @override
+  State<NoteItem> createState() => _NoteItemState();
+}
+
+class _NoteItemState extends State<NoteItem> {
+ 
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +33,7 @@ class NoteItem extends StatelessWidget {
             Container(
               height: MediaQuery.of(context).size.height / 10,
               width: 10,
-              color: Color(note.colorcode),
+              color: Color(widget.note.colorcode),
             ),
             const SizedBox(
               width: 10,
@@ -34,13 +43,13 @@ class NoteItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  note.title!,
+                  widget.note.title!,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width / 2,
                   child: Text(
-                    note.description!,
+                    widget.note.description!,
                     maxLines: 1,
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
@@ -49,27 +58,40 @@ class NoteItem extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  DateFormat.MMMEd().format(note.date),
+                  DateFormat.MMMEd().format(widget.note.date),
                   style: Theme.of(context).textTheme.bodySmall,
                 )
               ],
             ),
             const Spacer(),
-          InkWell(onTap: (){}, child: Icon(Icons.star)),
+          InkWell(
+             customBorder:RoundedRectangleBorder(borderRadius:  BorderRadius.circular(10),) ,
+              
+            onTap: (){
+            
+            setState(() {
+             widget.note.isStarred= !widget.note.isStarred; 
+              NoteDb.instance.addNote(widget.note);
+            });
+
+          }, child: Icon(widget.note.isStarred?Icons.star:Icons.star_border)),
            const  SizedBox(width: 8,),
             InkWell(
+               customBorder:RoundedRectangleBorder(borderRadius:  BorderRadius.circular(10),) ,
               
                 onTap: () {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
                     return EditingScreen(
-                      noteed: note,
+                      noteed: widget.note,
                     );
                   }));
                 },
                 child: const Icon(Icons.edit)),
                  const  SizedBox(width: 8,),
             InkWell(
+              customBorder:RoundedRectangleBorder(borderRadius:  BorderRadius.circular(10),) ,
+              
                 onTap: () {
                   showDialog(
                       context: context,
@@ -92,6 +114,8 @@ class NoteItem extends StatelessWidget {
                           ),
                           actions: [
                             InkWell(
+                               customBorder:RoundedRectangleBorder(borderRadius:  BorderRadius.circular(10),) ,
+              
                                 onTap: () {
                                   Navigator.pop(context);
                                 },
@@ -100,8 +124,10 @@ class NoteItem extends StatelessWidget {
                                   style: TextStyle(color: Colors.black),
                                 )),
                             InkWell(
+                               customBorder:RoundedRectangleBorder(borderRadius:  BorderRadius.circular(10),) ,
+              
                                 onTap: () {
-                                  NoteDb.instance.delNote(note.id);
+                                  NoteDb.instance.delNote(widget.note.id);
                                   Navigator.pop(context);
                                 },
                                 child: const Text(
@@ -112,7 +138,7 @@ class NoteItem extends StatelessWidget {
                         );
                       });
                 },
-                child: const Icon(Icons.delete_outline_sharp)),
+                child: const Icon(Icons.delete)),
               const  SizedBox(width: 8,)
           ],
         ),

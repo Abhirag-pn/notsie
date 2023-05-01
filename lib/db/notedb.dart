@@ -18,8 +18,13 @@ class NoteDb {
     );
   }
 
-  Stream<List<NoteModel>> getallNotes() {
+  Stream<List<NoteModel>> getallNotes(bool staredonly) {
+    if(staredonly){
+return notedb!.noteModels.filter().isStarredEqualTo(true).watch(fireImmediately: true);
+    }
+    else{
     return notedb!.noteModels.where().watch(fireImmediately: true);
+    }
   }
 
   Future<void> addNote(NoteModel note) async {

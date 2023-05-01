@@ -32,8 +32,13 @@ const NoteModelSchema = CollectionSchema(
       name: r'description',
       type: IsarType.string,
     ),
-    r'title': PropertySchema(
+    r'isStarred': PropertySchema(
       id: 3,
+      name: r'isStarred',
+      type: IsarType.bool,
+    ),
+    r'title': PropertySchema(
+      id: 4,
       name: r'title',
       type: IsarType.string,
     )
@@ -82,7 +87,8 @@ void _noteModelSerialize(
   writer.writeLong(offsets[0], object.colorcode);
   writer.writeDateTime(offsets[1], object.date);
   writer.writeString(offsets[2], object.description);
-  writer.writeString(offsets[3], object.title);
+  writer.writeBool(offsets[3], object.isStarred);
+  writer.writeString(offsets[4], object.title);
 }
 
 NoteModel _noteModelDeserialize(
@@ -95,7 +101,8 @@ NoteModel _noteModelDeserialize(
     colorcode: reader.readLong(offsets[0]),
     date: reader.readDateTime(offsets[1]),
     description: reader.readStringOrNull(offsets[2]),
-    title: reader.readStringOrNull(offsets[3]),
+    isStarred: reader.readBoolOrNull(offsets[3]) ?? false,
+    title: reader.readStringOrNull(offsets[4]),
   );
   object.id = id;
   return object;
@@ -115,6 +122,8 @@ P _noteModelDeserializeProp<P>(
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
+      return (reader.readBoolOrNull(offset) ?? false) as P;
+    case 4:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -524,6 +533,16 @@ extension NoteModelQueryFilter
     });
   }
 
+  QueryBuilder<NoteModel, NoteModel, QAfterFilterCondition> isStarredEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isStarred',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<NoteModel, NoteModel, QAfterFilterCondition> titleIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -714,6 +733,18 @@ extension NoteModelQuerySortBy on QueryBuilder<NoteModel, NoteModel, QSortBy> {
     });
   }
 
+  QueryBuilder<NoteModel, NoteModel, QAfterSortBy> sortByIsStarred() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isStarred', Sort.asc);
+    });
+  }
+
+  QueryBuilder<NoteModel, NoteModel, QAfterSortBy> sortByIsStarredDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isStarred', Sort.desc);
+    });
+  }
+
   QueryBuilder<NoteModel, NoteModel, QAfterSortBy> sortByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
@@ -777,6 +808,18 @@ extension NoteModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<NoteModel, NoteModel, QAfterSortBy> thenByIsStarred() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isStarred', Sort.asc);
+    });
+  }
+
+  QueryBuilder<NoteModel, NoteModel, QAfterSortBy> thenByIsStarredDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isStarred', Sort.desc);
+    });
+  }
+
   QueryBuilder<NoteModel, NoteModel, QAfterSortBy> thenByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
@@ -811,6 +854,12 @@ extension NoteModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<NoteModel, NoteModel, QDistinct> distinctByIsStarred() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isStarred');
+    });
+  }
+
   QueryBuilder<NoteModel, NoteModel, QDistinct> distinctByTitle(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -842,6 +891,12 @@ extension NoteModelQueryProperty
   QueryBuilder<NoteModel, String?, QQueryOperations> descriptionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'description');
+    });
+  }
+
+  QueryBuilder<NoteModel, bool, QQueryOperations> isStarredProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isStarred');
     });
   }
 
