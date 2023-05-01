@@ -79,7 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else {
                   return const Center(
                       child: CircularProgressIndicator(
-                    backgroundColor: Colors.black,
+                        color: Colors.black,
+                   
                   ));
                 }
               },
