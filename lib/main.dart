@@ -1,6 +1,5 @@
 import 'package:bloc_test/db/notedb.dart';
 
-import 'package:bloc_test/screens/homescreen.dart';
 import 'package:bloc_test/screens/splashscreen.dart';
 
 import 'package:flutter/material.dart';

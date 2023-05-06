@@ -20,7 +20,7 @@ class NoteDb {
 
   Stream<List<NoteModel>> getallNotes(bool staredonly) {
     if(staredonly){
-return notedb!.noteModels.filter().isStarredEqualTo(true).watch(fireImmediately: true);
+return notedb!.noteModels.filter().isStarredEqualTo(true).sortByDateDesc().watch(fireImmediately: true);
     }
     else{
     return notedb!.noteModels.where().watch(fireImmediately: true);

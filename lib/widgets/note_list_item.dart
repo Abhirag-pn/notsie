@@ -42,9 +42,16 @@ class _NoteItemState extends State<NoteItem> {
 
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  widget.note.title!,
-                  style: Theme.of(context).textTheme.titleMedium,
+                SizedBox(
+                    width: MediaQuery.of(context).size.width / 2,
+                  child: Text(
+                    widget.note.title!,
+                    style: Theme.of(context).textTheme.titleMedium,
+                     maxLines: 1,
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      textWidthBasis: TextWidthBasis.longestLine,
+                  ),
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width / 2,

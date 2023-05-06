@@ -84,7 +84,9 @@ class _EditingScreenState extends State<EditingScreen> {
                     );
                   });
             },
-            child: Row(
+         
+        borderRadius: BorderRadius.circular(50),
+           child: Row(
               children: [
                 CircleAvatar(
                   radius: 13,
@@ -99,7 +101,6 @@ class _EditingScreenState extends State<EditingScreen> {
                 )
               ],
             ),
-        borderRadius: BorderRadius.circular(50),
           ),
         ],
       ),
